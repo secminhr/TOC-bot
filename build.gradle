@@ -12,6 +12,12 @@ mainClassName = "secminhr.personal.ApplicationKt"
 def isDevelopment = project.ext.has("development")
 applicationDefaultJvmArgs = ["-Dio.ktor.development=$isDevelopment"]
 
+ktor {
+    docker {
+        localImageName.set("secminhrian/toc-host-image")
+    }
+}
+
 repositories {
     mavenCentral()
 }
