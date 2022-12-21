@@ -13,7 +13,7 @@ import secminhr.personal.plugins.configureRouting
 
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
+    embeddedServer(Netty, port = 80, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
