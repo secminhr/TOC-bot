@@ -3,6 +3,7 @@ package secminhr.personal
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.ReplyMessage
 import com.linecorp.bot.model.action.MessageAction
+import com.linecorp.bot.model.event.FollowEvent
 import com.linecorp.bot.model.event.MessageEvent
 import com.linecorp.bot.model.event.message.MessageContent
 import com.linecorp.bot.model.message.TextMessage
@@ -54,6 +55,9 @@ private suspend fun sendMessages(messages: Map<String, List<String>>, replyToken
 
 private val lastReplyToken: MutableMap<String, String> = mutableMapOf()
 fun <T: MessageContent> onMessage(event: MessageEvent<T>) {
+    lastReplyToken[event.source.userId] = event.replyToken
+}
+fun onMessage(event: FollowEvent) {
     lastReplyToken[event.source.userId] = event.replyToken
 }
 

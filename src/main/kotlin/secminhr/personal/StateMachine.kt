@@ -27,6 +27,7 @@ fun loadStateMachine(id: String): StateMachine<String, Any, Any> {
 }
 
 val servingMachines = mutableMapOf<String, StateMachine<*, Event, *>>()
+val userTOCBackupMachine = mutableMapOf<String, StateMachine<*, Event, *>>()
 private val userCustomMachines = mutableMapOf<String, StateMachineModel>()
 
 fun receiveFrom(user: String, text: String) = Event.ReceiveText(user, text)
@@ -38,7 +39,7 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
         on(receiveFrom(user, "help")) {
             val replies = if (userCustomMachines.containsKey(user)) quickReplies("new", "edit", "run", "help") else quickReplies("new", "help")
             replyMessageTo(user,
-                "Commands are listed at the bottom the chat" to replies
+                "Commands are listed at the bottom of the chat" to replies
             )
             transitionTo(State.Start)
         }
