@@ -80,8 +80,8 @@ data class StateMachineModel(
             for (machineState in states) {
                 state("__Exiting") {
                     onEnter {
-//                        servingMachines[ownerUserId] = createEchoMachine(ownerUserId)
-                        servingMachines[ownerUserId] = TOCMachine(ownerUserId)
+                        servingMachines[ownerUserId] = userTOCBackupMachine[ownerUserId]!!
+                        servingMachines[ownerUserId]!!.transition(Event.UserMachineExit)
                     }
                 }
 

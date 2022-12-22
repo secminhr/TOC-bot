@@ -24,7 +24,7 @@ const val CHANNEL_SECRET = "CHANNEL_SECRET"
 private val validator = LineSignatureValidator(System.getenv(CHANNEL_SECRET).toByteArray())
 private val parser = WebhookParser(validator)
 
-const val WelcomeMessage = """
+const val welcomeMessage = """
 Welcome to bot-bot.
 This bot allows you to create a state machine and run it directly in your chat room!
 Available commands are provided to you with the little babble at the bottom of the chat.
@@ -43,25 +43,29 @@ fun Application.configureRouting() {
             }
 
             request.events
-                .mapNotNull { it as? FollowEvent }
+                .filterNotNull()
                 .forEach {
-                    onMessage(it)
-                    if (!servingMachines.containsKey(it.source.userId)) {
-                        servingMachines[it.source.userId] = TOCMachine(it.source.userId)
-                    }
-                    replyMessageTo(it.source.userId, "")
-                }
-
-            request.events
-                .mapNotNull { it as? MessageEvent<*> }
-                .filter { it.mode == EventMode.ACTIVE }
-                .forEach { event ->
-                    onMessage(event)
-                    if (!servingMachines.containsKey(event.source.userId)) {
-                        servingMachines[event.source.userId] = TOCMachine(event.source.userId)
-                    }
-                    (event.message as? TextMessageContent)?.let {
-                        servingMachines[event.source.userId]!!.transition(Event.ReceiveText(event.source.userId, it.text))
+                    when (it) {
+                        is FollowEvent -> {
+                            onMessage(it)
+                            if (!servingMachines.containsKey(it.source.userId)) {
+                                servingMachines[it.source.userId] = TOCMachine(it.source.userId)
+                            }
+                            if (userCustomMachines.containsKey(it.source.userId)) {
+                                replyMessageTo(it.source.userId, welcomeMessage to quickReplies("new", "edit", "run", "help"))
+                            } else {
+                                replyMessageTo(it.source.userId, welcomeMessage to quickReplies("new", "help"))
+                            }
+                        }
+                        is MessageEvent<*> -> {
+                            onMessage(it)
+                            if (!servingMachines.containsKey(it.source.userId)) {
+                                servingMachines[it.source.userId] = TOCMachine(it.source.userId)
+                            }
+                            (it.message as? TextMessageContent)?.let { message ->
+                                servingMachines[it.source.userId]!!.transition(Event.ReceiveText(it.source.userId, message.text))
+                            }
+                        }
                     }
                 }
         }

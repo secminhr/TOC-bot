@@ -3,7 +3,7 @@ package secminhr.personal
 import com.tinder.StateMachine
 
 enum class State {
-    Start, NewMachine, FirstInitState, ChangeInitStateName, SelectEditMachine, Editing, StateCreate,
+    Start, Running, FirstInitState, ChangeInitStateName, SelectEditMachine, Editing, StateCreate,
     TransitionCreateFrom, TransitionCreateTo, TransitionCreateWhenReceive, TransitionCreateAction
 }
 
@@ -12,6 +12,7 @@ sealed class Event {
     object EditMachine: Event()
     data class ReceiveText(val userId: String, val text: String): Event()
     object RenameCurrentNode: Event()
+    object UserMachineExit: Event()
 }
 
 sealed class SideEffect {
@@ -28,7 +29,7 @@ fun loadStateMachine(id: String): StateMachine<String, Any, Any> {
 
 val servingMachines = mutableMapOf<String, StateMachine<*, Event, *>>()
 val userTOCBackupMachine = mutableMapOf<String, StateMachine<*, Event, *>>()
-private val userCustomMachines = mutableMapOf<String, StateMachineModel>()
+val userCustomMachines = mutableMapOf<String, StateMachineModel>()
 
 fun receiveFrom(user: String, text: String) = Event.ReceiveText(user, text)
 fun quickReplies(vararg replies: String) = if (replies.isNotEmpty()) replies.toList() else emptyList()
@@ -66,8 +67,9 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
         on(receiveFrom(user, "run")) {
             if (userCustomMachines.containsKey(user)) {
                 replyMessageTo(user, "Your machine is started, use __Exit when you want to exit")
+                userTOCBackupMachine[user] = servingMachines[user]!!
                 servingMachines[user] = userCustomMachines[user]!!.toStateMachine()
-                transitionTo(State.Start)
+                transitionTo(State.Running)
             } else {
                 replyMessageTo(user,
                     "You have no state machine" to quickReplies("new")
@@ -76,6 +78,7 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
             }
         }
     }
+    //new
     state(State.FirstInitState) {
         on(receiveFrom(user, "__cancel")) {
             replyMessageTo(user, "State machine creation is cancelled" to quickReplies("new", "help"))
@@ -92,6 +95,15 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
             transitionTo(State.Editing)
         }
     }
+    //run
+    state(State.Running) {
+        on(Event.UserMachineExit) {
+            replyMessageTo(user, "Exit" to quickReplies(), "Welcome back to edit mode" to quickReplies("new", "edit", "run", "help"))
+            transitionTo(State.Start)
+        }
+    }
+
+    //edit
     state(State.Editing) {
         on(receiveFrom(user, "change initial state")) {
             replyMessageTo(user, "Initial state name:" to quickReplies("__cancel"))
