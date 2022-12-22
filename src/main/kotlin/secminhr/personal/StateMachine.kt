@@ -62,7 +62,6 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
                 )
                 transitionTo(State.Start)
             }
-
         }
         on(receiveFrom(user, "run")) {
             if (userCustomMachines.containsKey(user)) {
