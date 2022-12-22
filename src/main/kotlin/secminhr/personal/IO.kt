@@ -14,8 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
-import java.util.IllegalFormatCodePointException
-import java.util.StringJoiner
 
 const val CHANNEL_ACCESS_TOKEN = "CHANNEL_ACCESS_TOKEN"
 private val lineClient = LineMessagingClient.builder(System.getenv(CHANNEL_ACCESS_TOKEN)).build()
@@ -78,10 +76,5 @@ fun replyMessageTo(userId: String, message: Map<String, List<String>>) {
             sendMessages(message, it)
         }
     }
-}
-
-
-fun sendChoices(title: String, choices: List<String>, replayToken: String) {
-
 }
 

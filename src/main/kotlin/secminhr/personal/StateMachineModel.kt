@@ -13,40 +13,6 @@ fun SEND_MSG(msg: String) = Action {
     replyMessageTo(it, msg)
 }
 
-val venderMachineInitalState = "Start"
-val venderMachineStates = mutableSetOf("Start", "$0", "$5", "$10", "$15", "$20", "$25")
-val venderMachineTransitions = mutableMapOf(
-    "Start" to mutableListOf(
-        Triple("buy", "$0", SEND_MSG("Remain: $20"))
-    ),
-    "$0" to mutableListOf(
-        Triple("5", "$5", SEND_MSG("Remain: $15")),
-        Triple("10", "$10", SEND_MSG("Remain: $10"))
-    ),
-    "$5" to mutableListOf(
-        Triple("5", "$10", SEND_MSG("Remain: $10")),
-        Triple("10", "$15", SEND_MSG("Remain: $5"))
-    ),
-    "$10" to mutableListOf(
-        Triple("5", "$15", SEND_MSG("Remain: $5")),
-        Triple("10", "$20", SEND_MSG("Here's your drink"))
-    ),
-    "$15" to mutableListOf(
-        Triple("5", "$20", SEND_MSG("Here's your drink")),
-        Triple("10", "$25", SEND_MSG("Here's your drink and $5 in change"))
-    ),
-    "$20" to mutableListOf(
-        Triple("buy", "$0", SEND_MSG("Remain: $20"))
-    ),
-    "$25" to mutableListOf(
-        Triple("buy", "$0", SEND_MSG("Remain: $20"))
-    )
-)
-
-fun createVenderMachine(ownerUserId: String) =
-    StateMachineModel(ownerUserId, venderMachineInitalState, venderMachineStates, venderMachineTransitions).toStateMachine()
-
-
 data class StateMachineModel(
     val ownerUserId: String,
     var initialState: String = "",

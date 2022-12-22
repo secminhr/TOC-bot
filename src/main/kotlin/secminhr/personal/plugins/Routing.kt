@@ -1,6 +1,5 @@
 package secminhr.personal.plugins
 
-import com.linecorp.bot.model.event.EventMode
 import com.linecorp.bot.model.event.FollowEvent
 import com.linecorp.bot.model.event.MessageEvent
 import com.linecorp.bot.model.event.message.TextMessageContent
@@ -11,13 +10,9 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
-import kotlinx.serialization.Serializable
 import secminhr.personal.*
 import java.lang.Exception
 import kotlin.text.toByteArray
-
-@Serializable
-data class WebhookEventObjet(val type: String, val replyToken: String? = null)
 
 const val CHANNEL_SECRET = "CHANNEL_SECRET"
 

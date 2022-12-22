@@ -6,7 +6,6 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.doublereceive.*
-import io.ktor.server.plugins.requestvalidation.*
 import kotlinx.serialization.json.Json
 import secminhr.personal.plugins.configureRouting
 
