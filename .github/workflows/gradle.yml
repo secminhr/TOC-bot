@@ -39,6 +39,7 @@ jobs:
     - name: push
       uses: ad-m/github-push-action@master
     - name: trigger deploy
-      uses: octokit/request-action@v2.x
+      uses: fjogeleit/http-request-action@v1
       with:
-        route: GET ${{ secrets.DEPLOY_API }}
+        url: ${{ secret.DEPLOY_API }}
+        method: 'GET'
