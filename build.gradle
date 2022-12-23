@@ -21,6 +21,11 @@ ktor {
     }
 }
 
+
+compileKotlin {
+    kotlinOptions.freeCompilerArgs = ["-Xcontext-receivers"]
+}
+
 repositories {
     mavenCentral()
 }

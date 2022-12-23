@@ -60,8 +60,7 @@ fun onMessage(event: FollowEvent) {
 }
 
 private val lineResponseCoroutine = CoroutineScope(Dispatchers.IO + SupervisorJob())
-fun replyMessageTo(userId: String, text: String, quickReply: List<String> = listOf()) = replyMessageTo(userId, listOf(text))
-fun replyMessageTo(userId: String, vararg text: String) = replyMessageTo(userId, text.toList())
+fun replyMessageTo(userId: String, text: String) = replyMessageTo(userId, listOf(text))
 fun replyMessageTo(userId: String, text: List<String>) {
     lastReplyToken[userId]?.let {
         lineResponseCoroutine.launch {
