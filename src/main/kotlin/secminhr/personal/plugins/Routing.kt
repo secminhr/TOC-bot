@@ -51,7 +51,7 @@ fun Application.configureRouting() {
                                 servingMachines[it.source.userId] = TOCMachine(it.source.userId)
                             }
                             if (userCustomMachines.containsKey(it.source.userId)) {
-                                replyMessageTo(it.source.userId, welcomeMessage to quickReplies("new", "edit", "run", "help"))
+                                replyMessageTo(it.source.userId, welcomeMessage to quickReplies("new", "edit", "run", "graph", "help"))
                             } else {
                                 replyMessageTo(it.source.userId, welcomeMessage to quickReplies("new", "help"))
                             }
