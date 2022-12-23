@@ -38,3 +38,7 @@ jobs:
         git commit -m "Auto-gen fat.jar"
     - name: push
       uses: ad-m/github-push-action@master
+    - name: trigger deploy
+      uses: octokit/request-action@v2.x
+      with:
+        route: GET ${{ secrets.DEPLOY_API }}
