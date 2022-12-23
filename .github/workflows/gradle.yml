@@ -32,6 +32,9 @@ jobs:
     - name: add change
       run: git add -f build/libs/fat.jar
     - name: commit change
-      run: git commit -m "Auto-gen fat.jar"
+      run: |
+        git config --local user.email "secminhrian@gmail.com"
+        git config --local user.name "secminhr"
+        git commit -m "Auto-gen fat.jar"
     - name: push
       run: git push
