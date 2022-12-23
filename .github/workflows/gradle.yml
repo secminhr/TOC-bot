@@ -41,5 +41,5 @@ jobs:
     - name: trigger deploy
       uses: fjogeleit/http-request-action@v1
       with:
-        url: ${{ secret.DEPLOY_API }}
+        url: ${{ secrets.DEPLOY_API }}
         method: 'GET'
