@@ -1,6 +1,12 @@
 package secminhr.personal
 
 import com.tinder.StateMachine
+import guru.nidi.graphviz.attribute.*
+import guru.nidi.graphviz.engine.Format
+import guru.nidi.graphviz.graph
+import guru.nidi.graphviz.model.MutableGraph
+import guru.nidi.graphviz.toGraphviz
+import java.io.File
 
 fun interface Action {
     fun run(userId: String)
@@ -24,6 +30,8 @@ data class StateMachineModel(
     var transitionCreationToState: String = ""
     var transitionCreationWhenReceive: String = ""
     var transitionCreationAction: Action? = null
+
+    private var graph: MutableGraph? = null
 
     fun containsState(state: String) = states.contains(state)
     fun createTransition() {
@@ -64,5 +72,32 @@ data class StateMachineModel(
                 }
             }
         }
+    }
+
+    fun createGraph() {
+        graph = graph(directed = true) {
+            graph[Rank.dir(Rank.RankDir.LEFT_TO_RIGHT)]
+            for (state in states) {
+                if (state == initialState) {
+                    state[Shape.DOUBLE_CIRCLE, Style.FILLED, Color.RED, Color.rgb(221, 154, 127).fill()]
+                } else {
+                    state[Shape.CIRCLE]
+                }
+            }
+            for ((fromState, transitionsFromState) in transitions) {
+                for ((onText, toState, _) in transitionsFromState) {
+                    (fromState - toState)[Label.of(onText)]
+                }
+            }
+        }
+    }
+
+    fun saveGraph(format: Format): File {
+        val directory = File("images")
+        if (!directory.exists()) {
+            directory.mkdir()
+        }
+        return graph!!.toGraphviz().render(format)
+            .toFile(File.createTempFile(ownerUserId, "", directory))
     }
 }

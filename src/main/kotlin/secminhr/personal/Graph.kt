@@ -39,6 +39,11 @@ fun main() {
         ("TransitionCreateAction" - "Editing")[Label.of("__none")]
         ("TransitionCreateAction" - "Editing")[Label.of("ReceiveText")]
         ("Editing" - "Start")[Label.of("done")]
+        ("Start" - "Start")[Label.of("graph (no machine available)")]
+        ("Start" - "GraphChooseFormat")[Label.of("graph (machine available)")]
+        ("GraphChooseFormat" - "Start")[Label.of("svg")]
+        ("GraphChooseFormat" - "Start")[Label.of("png")]
+        ("GraphChooseFormat" - "Start")[Label.of("ReceiveText (unsupported format)")]
         "Start"[Shape.DOUBLE_CIRCLE, Style.FILLED, Color.RED, Color.rgb(221, 154, 127).fill()]
     }
 

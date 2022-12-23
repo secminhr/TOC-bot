@@ -1,10 +1,17 @@
 package secminhr.personal
 
 import com.tinder.StateMachine
+import guru.nidi.graphviz.engine.Format
 
 enum class State {
-    Start, Running, FirstInitState, ChangeInitStateName, SelectEditMachine, Editing, StateCreate,
-    TransitionCreateFrom, TransitionCreateTo, TransitionCreateWhenReceive, TransitionCreateAction
+    Start,
+    Running,
+    FirstInitState,
+    Editing,
+    ChangeInitStateName, StateCreate,
+    TransitionCreateFrom, TransitionCreateTo, TransitionCreateWhenReceive, TransitionCreateAction,
+    GraphChooseFormat,
+    GraphJPG, GraphPNG, GraphSVG
 }
 
 sealed class Event {
@@ -19,14 +26,6 @@ sealed class SideEffect {
 
 }
 
-fun userMachineNames(): List<String> {
-    return listOf()
-}
-
-fun loadStateMachine(id: String): StateMachine<String, Any, Any> {
-    return StateMachine.create {}
-}
-
 val servingMachines = mutableMapOf<String, StateMachine<*, Event, *>>()
 val userTOCBackupMachine = mutableMapOf<String, StateMachine<*, Event, *>>()
 val userCustomMachines = mutableMapOf<String, StateMachineModel>()
@@ -34,11 +33,14 @@ val userCustomMachines = mutableMapOf<String, StateMachineModel>()
 fun receiveFrom(user: String, text: String) = Event.ReceiveText(user, text)
 fun quickReplies(vararg replies: String) = if (replies.isNotEmpty()) replies.toList() else emptyList()
 
+val domain by lazy {
+    System.getenv("DOMAIN")
+}
 fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
     initialState(State.Start)
     state(State.Start) {
         on(receiveFrom(user, "help")) {
-            val replies = if (userCustomMachines.containsKey(user)) quickReplies("new", "edit", "run", "help") else quickReplies("new", "help")
+            val replies = if (userCustomMachines.containsKey(user)) quickReplies("new", "edit", "run", "graph", "help") else quickReplies("new", "help")
             replyMessageTo(user,
                 "Commands are listed at the bottom of the chat" to replies
             )
@@ -58,7 +60,7 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
                 transitionTo(State.Editing)
             } else {
                 replyMessageTo(user,
-                    "You have no state machine" to quickReplies("new")
+                    "You have no state machine" to quickReplies("new", "help")
                 )
                 transitionTo(State.Start)
             }
@@ -71,8 +73,17 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
                 transitionTo(State.Running)
             } else {
                 replyMessageTo(user,
-                    "You have no state machine" to quickReplies("new")
+                    "You have no state machine" to quickReplies("new", "help")
                 )
+                transitionTo(State.Start)
+            }
+        }
+        on(receiveFrom(user, "graph")) {
+            if (userCustomMachines.contains(user)) {
+                replyMessageTo(user, "Choose image format:" to quickReplies("png", "svg"))
+                transitionTo(State.GraphChooseFormat)
+            } else {
+                replyMessageTo(user, "You have no state machine" to quickReplies("new", "help"))
                 transitionTo(State.Start)
             }
         }
@@ -97,7 +108,7 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
     //run
     state(State.Running) {
         on(Event.UserMachineExit) {
-            replyMessageTo(user, "Exit" to quickReplies(), "Welcome back to edit mode" to quickReplies("new", "edit", "run", "help"))
+            replyMessageTo(user, "Exit" to quickReplies(), "Welcome back to edit mode" to quickReplies("new", "edit", "run", "graph", "help"))
             transitionTo(State.Start)
         }
     }
@@ -117,7 +128,7 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
             transitionTo(State.TransitionCreateFrom)
         }
         on(receiveFrom(user, "done")) {
-            replyMessageTo(user, "Done editing state machine" to quickReplies("new", "edit", "run", "help"))
+            replyMessageTo(user, "Done editing state machine" to quickReplies("new", "edit", "run", "graph", "help"))
             transitionTo(State.Start)
         }
     }
@@ -233,6 +244,21 @@ fun TOCMachine(user: String) = StateMachine.create<State, Event, SideEffect> {
             userCustomMachines[user]!!.transitionCreationAction = SEND_MSG(it.text)
             userCustomMachines[user]!!.createTransition()
             transitionTo(State.Editing)
+        }
+    }
+    //graph
+    state(State.GraphChooseFormat) {
+        onEnter {
+            userCustomMachines[user]!!.createGraph()
+        }
+        on<Event.ReceiveText> {
+            if (it.text == "png" || it.text == "svg") {
+                val file = userCustomMachines[user]!!.saveGraph(if (it.text == "png") Format.PNG  else Format.SVG)
+                replyMessageTo(user, "View the image: ${domain}/images/${file.name}" to quickReplies("new", "edit", "run", "graph", "help"))
+            } else {
+                replyMessageTo(user, "unsupported format" to quickReplies("new", "edit", "run", "graph", "help"))
+            }
+            transitionTo(State.Start)
         }
     }
 }

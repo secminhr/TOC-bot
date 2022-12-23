@@ -8,9 +8,11 @@ import com.linecorp.bot.parser.WebhookParser
 import io.ktor.server.routing.*
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import secminhr.personal.*
+import java.io.File
 import java.lang.Exception
 import kotlin.text.toByteArray
 
@@ -29,6 +31,10 @@ fun Application.configureRouting() {
 
     // Starting point for a Ktor app:
     routing {
+        static("/images") {
+            staticRootFolder = File("images")
+            files(".")
+        }
         post("/") {
             val request = try {
                 parser.handle(call.request.header("x-line-signature"), call.receive())
