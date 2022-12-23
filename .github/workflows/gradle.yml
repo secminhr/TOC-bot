@@ -30,7 +30,7 @@ jobs:
       with:
         arguments: buildFatJar --no-daemon
     - name: add change
-      run: git add build/libs/fat.jar
+      run: git add -f build/libs/fat.jar
     - name: commit change
       run: git commit -m "Auto-gen fat.jar"
     - name: push
