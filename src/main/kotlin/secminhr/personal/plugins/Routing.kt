@@ -21,11 +21,9 @@ const val CHANNEL_SECRET = "CHANNEL_SECRET"
 private val validator = LineSignatureValidator(System.getenv(CHANNEL_SECRET).toByteArray())
 private val parser = WebhookParser(validator)
 
-const val welcomeMessage = """
-Welcome to bot-bot.
+const val welcomeMessage = """Welcome to bot-bot.
 This bot allows you to create a state machine and run it directly in your chat room!
-Available commands are provided to you with the little babble at the bottom of the chat.
-"""
+Available commands are provided to you with the little bubble at the bottom of the chat."""
 
 fun Application.configureRouting() {
 
