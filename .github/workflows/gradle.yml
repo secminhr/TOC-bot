@@ -37,4 +37,4 @@ jobs:
         git config --local user.name "secminhr"
         git commit -m "Auto-gen fat.jar"
     - name: push
-      run: git push
+      uses: ad-m/github-push-action@master
