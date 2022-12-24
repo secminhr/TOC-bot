@@ -16,6 +16,7 @@ All commands are provided via the bubbles at the bottom of the chat, to save our
 ## Quickstart: A door
 Let's use this bot to create a simple door that you can open/close.
 Our goal FSM is:
+
 ![U80a523ee262248d7ef54e3879764547817204169967903271072.png](Photos-001/U80a523ee262248d7ef54e3879764547817204169967903271072.png)
 
 ### Add the bot
