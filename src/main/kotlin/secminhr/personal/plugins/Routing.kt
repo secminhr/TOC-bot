@@ -30,6 +30,7 @@ fun Application.configureRouting() {
     // Starting point for a Ktor app:
     routing {
         get("/check") {
+            println("health check")
             call.respond(status = HttpStatusCode.OK, "")
         }
         static("/images") {
