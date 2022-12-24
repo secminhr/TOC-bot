@@ -18,6 +18,9 @@ Let's use this bot to create a simple door that you can open/close.
 Our goal FSM is:
 ![U80a523ee262248d7ef54e3879764547817204169967903271072.png](Photos-001/U80a523ee262248d7ef54e3879764547817204169967903271072.png)
 
+### Add the bot
+![截圖 2022-12-24 20.50.04.png](Photos-001/%E6%88%AA%E5%9C%96%202022-12-24%2020.50.04.png)
+
 ### Greeting
 When you add (or unblock) the bot, you'll receive the greeting message along with the available actions: 
 ![Screenshot_20221224_163953_LINE.jpg](Photos-001/Screenshot_20221224_163953_LINE.jpg)
