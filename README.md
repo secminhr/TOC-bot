@@ -112,11 +112,11 @@ Use `__Exit` command at anytime you want to exit your own bot.
 
 ## Tooling
 ### Language
-We use Kotlin in this project. Version above 1.6.20-M1 is needed, for experimental feature `context receiver`
+We use [Kotlin](https://kotlinlang.org/) in this project. Version above 1.6.20-M1 is needed, for experimental feature `context receiver`
 Currently 1.7.21 is used.
 ### Web server
-We use Ktor framework to create the server.
-The server has 2 endpoints:
+We use [Ktor framework](https://ktor.io/) to create the server.
+The server has 2 public endpoints:
 - `/`: handles line webhook
 - `/images`: hosts generated user machines' images
 ### FSM tool
