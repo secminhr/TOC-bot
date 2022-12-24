@@ -104,7 +104,7 @@ And then `close`:
 It worked!!
 
 Use `__Exit` command at anytime you want to exit your own bot.
-![Screenshot_20221224_164706_LINE.jpg](Photos-001/Screenshot_20221224_164706_LINE.jpg =30%x)
+![Screenshot_20221224_164706_LINE.jpg](Photos-001/Screenshot_20221224_164706_LINE.jpg)
 
 ## Tooling
 ### Language
