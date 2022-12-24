@@ -29,6 +29,9 @@ fun Application.configureRouting() {
 
     // Starting point for a Ktor app:
     routing {
+        get("/check") {
+            call.respond(status = HttpStatusCode.OK, "")
+        }
         static("/images") {
             staticRootFolder = File("images")
             files(".")

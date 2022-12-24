@@ -14,6 +14,7 @@ You can:
 All commands are provided via the bubbles at the bottom of the chat, to save our users from typing the same commands.
 
 ## Quickstart: A vending machine!
+ 
 
 ## Tooling
 ### Language
